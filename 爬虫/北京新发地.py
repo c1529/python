@@ -1,5 +1,6 @@
 import requests
 import re
+import csv
 
 url = 'http://www.xinfadi.com.cn/getCat.html'
 
@@ -27,11 +28,25 @@ obj = re.compile(r'"prodName":"(?P<name>.*?)","'
 
 list1 = obj.finditer(text)
 
-for i in list1:
-    print(i.group('name'),
-          i.group('kind'),
-          i.group('low'),
-          i.group('high'),
-          i.group('avg'),
-          i.group('place'),
-          i.group('data'))
+# for i in list1:
+#     print(i.group('name'),
+#           i.group('kind'),
+#           i.group('low'),
+#           i.group('high'),
+#           i.group('avg'),
+#           i.group('place'),
+#           i.group('data'))
+
+head = ['名字', '种类', '最低价', '最高价', '平均价', '产地', '时间']
+
+with open("text.csv", "w", encoding='gbk', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(head)
+    for i in list1:
+        writer.writerow([i.group('name'),
+                        i.group('kind'),
+                        i.group('low'),
+                        i.group('high'),
+                        i.group('avg'),
+                        i.group('place'),
+                        i.group('data')])
