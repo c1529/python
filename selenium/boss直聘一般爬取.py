@@ -1,5 +1,3 @@
-# 出了点小问题，不过数据都获取了
-
 import time
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
@@ -26,7 +24,7 @@ with open("BOSS直聘.csv", mode="w", encoding="gbk", newline="") as file:
 
 def close_window():
     try:
-        time.sleep(0.5)
+        time.sleep(1)
         if web.find_element(By.XPATH, '/html/body/div[9]/div[2]/div[1]/span/i'):
             web.find_element(By.XPATH, '/html/body/div[9]/div[2]/div[1]/span/i').click()
     except BaseException as e:
@@ -72,7 +70,7 @@ def ffff():
 url = 'https://www.zhipin.com/web/geek/job?query=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B8%88&city=100010000&page=1'
 web.get(url)
 close_window()
-res = web.find_elements(By.XPATH, '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[2]/ul/li')
+res = web.find_elements(By.XPATH, '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[@class="search-job-result"]/ul/li')
 for i in res:
     name = i.find_element(By.XPATH, './div[1]/a/div[1]/span[1]').text
     place = i.find_element(By.XPATH, './div[1]/a/div[1]/span[2]/span').text
@@ -89,9 +87,9 @@ for i in res:
         writer = csv.writer(file)
         writer.writerow([name, place, money, jinyan, xueli, gongsi, guimo, kill, fuli])
 
-for j in range(2, 11):
+for j in range(1, 11):
     h = str(j)
     url = 'https://www.zhipin.com/web/geek/job?query=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B8%88&city=100010000&page=' + h
     web.get(url)
-    time.sleep(8)
+    time.sleep(19)
     ffff()
