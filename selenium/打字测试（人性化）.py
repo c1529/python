@@ -70,25 +70,25 @@ def write(row):
     # time.sleep(6)
 
 
-txt1 = ''
-
+# str长度有限制，所以用循环
 try:
     for row_1 in range(0, 100):
-        txt1 += write(row_1)
+        txt1 = write(row_1)
+        for i in txt1:
+            # 等待时间
+            time_wait = random.randint(1, 2)
+            time.sleep(time_wait / 10)
+            # 错误的概率
+            error_cc = random.randint(1, 21)
+            if error_cc % 11 == 0:
+                keybord.press('a')
+                # 进行退格操作
+                keybord.press(Key.backspace)
+                keybord.release(Key.backspace)
+            keybord.press(i)
 except Exception as e:
     print('所有行已经准备好')
 
-for i in txt1:
-    # 等待时间
-    time_wait = random.randint(1, 2)
-    time.sleep(time_wait / 10)
-    # 错误的概率
-    error_cc = random.randint(1, 15)
-    if error_cc % 11 == 0:
-        keybord.press('a')
-        # 进行退格操作
-        keybord.press(Key.backspace)
-        keybord.release(Key.backspace)
-    keybord.press(i)
+
 
 time.sleep(360)
