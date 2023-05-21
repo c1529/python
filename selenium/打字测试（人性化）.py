@@ -76,19 +76,18 @@ try:
         txt1 = write(row_1)
         for i in txt1:
             # 等待时间
-            time_wait = random.randint(1, 2)
-            time.sleep(time_wait / 10)
+            time_wait = random.randint(10, 60)
+            time.sleep(time_wait / 300)
             # 错误的概率
-            error_cc = random.randint(1, 21)
+            error_cc = random.randint(1, 18)
             if error_cc % 11 == 0:
-                keybord.press('a')
+                aa = random.randint(99, 122)
+                keybord.press(chr(aa))
                 # 进行退格操作
                 keybord.press(Key.backspace)
                 keybord.release(Key.backspace)
             keybord.press(i)
 except Exception as e:
     print('所有行已经准备好')
-
-
 
 time.sleep(360)
