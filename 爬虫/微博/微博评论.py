@@ -1,6 +1,10 @@
 # 爬取的是天气之子首条置顶评论
 import requests
 import json
+import time
+import re
+
+start_time = time.time()
 
 o_url = 'https://weibo.com/ajax/statuses/buildComments?is_reload=1&id=4529159030703841&is_show_bulletin=2&is_mix=0' \
         '&count=10&uid=6885069945&fetch_level=0'
@@ -44,6 +48,10 @@ def geturl(max_id):
     return r
 
 
+# 定义切割的正则表达式模式
+pattern = r"[<]"
+
+
 def getcomment(url):
     res = requests.get(url, headers=headers)
     res = res.text
@@ -52,7 +60,9 @@ def getcomment(url):
     print(max_id)
     jso = jso['data']
     for j in jso:
-        print(j['text'])
+        # 使用 re 模块的 split() 函数进行字符串切割
+        p_text = result = re.split(pattern, j['text'])[0]
+        print(p_text)
 
 
 def getid(url):
@@ -62,7 +72,11 @@ def getid(url):
     return js1['max_id']
 
 
-for i in range(0, page+1):
+for i in range(0, page + 1):
     url = geturl(max_id)
     getcomment(url)
     max_id = getid(url)
+
+end_time = time.time()
+
+print("程序运行的是时间：", end_time - start_time)
