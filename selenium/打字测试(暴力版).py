@@ -1,3 +1,4 @@
+
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -61,7 +62,7 @@ def write(row):
     a2 = web.find_element(By.XPATH, r'//*[@id="i_' + str(row) + r'"]/input[2]')
     a2.send_keys(a1)
     a2.send_keys(' ')
-    time.sleep(6)
+    time.sleep(7)
 
 
 try:
