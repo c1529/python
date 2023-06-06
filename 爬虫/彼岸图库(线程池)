@@ -1,0 +1,43 @@
+import requests
+import re
+from concurrent.futures import ThreadPoolExecutor
+
+headers = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 '
+                  'Safari/537.36'
+}
+
+object1 = re.compile(r'img src="(?P<url>.*?)".*?alt="(?P<name>.*?)"')
+
+o_url = 'https://pic.netbian.com/4kdongman/index_'
+
+
+def save_img(img_url, img_name):
+    img_url = requests.get(url=img_url, headers=headers).content
+    with open(f'./动漫图片/{img_name}.jpg', mode='wb') as f:
+        f.write(img_url)
+
+
+def get_url(page):
+    return o_url + str(page) + '.html'
+
+
+def get_satrt(start_url):
+    res = requests.get(url=start_url, headers=headers)
+    res.encoding = 'gbk'
+    result = re.split('xzdesktop.cqttech.com/vimg/bian2.html"', res.text)[0]
+    result = object1.finditer(result)
+    for i in result:
+        url = 'https://pic.netbian.com' + i.group('url')
+        save_img(url, i.group('name'))
+
+
+def main(p):
+    print(f"正在爬取{p}页")
+    get_satrt(get_url(p))
+    print(f"已爬取完{p}页")
+
+
+with ThreadPoolExecutor(max_workers=16) as k:
+    for j in range(2, 167):
+        k.submit(main, j)
