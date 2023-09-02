@@ -2,6 +2,7 @@ import requests
 import test
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 headers = {
     'Referer':
@@ -16,7 +17,8 @@ def main(page):
     url = f'https://www.pixiv.net/ranking.php?p={page}&format=json'
     response = requests.get(url=url, headers=headers)
     result = json.loads(response.text)['contents']
-    for i in result:
-        time.sleep(0.8)
-        illust_id = i['illust_id']
-        test.main(illust_id)
+    with ThreadPoolExecutor(max_workers=32) as k1:
+        for i in result:
+            time.sleep(0.8)
+            illust_id = i['illust_id']
+            k1.submit(test.main, illust_id)
