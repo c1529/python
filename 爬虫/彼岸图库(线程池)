@@ -3,41 +3,55 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 
 headers = {
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 '
-                  'Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 '
+                  'Safari/537.36 Edg/121.0.0.0'
 }
 
-object1 = re.compile(r'img src="(?P<url>.*?)".*?alt="(?P<name>.*?)"')
+object1 = re.compile(r'<ul class="clearfix">(.*?)<div class="page">', re.S)
+object2 = re.compile(r'<li><a href="(?P<url>.*?)" target="_blank">(.*?)<b>(?P<name>.*?)</b>', re.S)
 
-o_url = 'https://pic.netbian.com/4kdongman/index_'
-
-
-def save_img(img_url, img_name):
-    img_url = requests.get(url=img_url, headers=headers).content
-    with open(f'./动漫图片/{img_name}.jpg', mode='wb') as f:
-        f.write(img_url)
+o_url = 'https://pic.netbian.com/pingban/index.html'
 
 
-def get_url(page):
-    return o_url + str(page) + '.html'
+# 获取壁纸详细网页
+def get_html(html_url):
+    response = requests.get(html_url, headers=headers)
+    response.encoding = 'gbk'
+    result = object1.findall(response.text)[0]
+    result2 = object2.finditer(result)
+    for i in result2:
+        url = i.group('url')
+        name = i.group('name')
+        get_image(get_html2(url), name)
 
 
-def get_satrt(start_url):
-    res = requests.get(url=start_url, headers=headers)
-    res.encoding = 'gbk'
-    result = re.split('xzdesktop.cqttech.com/vimg/bian2.html"', res.text)[0]
-    result = object1.finditer(result)
-    for i in result:
-        url = 'https://pic.netbian.com' + i.group('url')
-        save_img(url, i.group('name'))
+# 在壁纸详细网页获取图片
 
 
-def main(p):
-    print(f"正在爬取{p}页")
-    get_satrt(get_url(p))
-    print(f"已爬取完{p}页")
+def get_html2(url):
+    url = 'https://pic.netbian.com/' + url
+    response = requests.get(url, headers=headers)
+    response.encoding = 'gbk'
+    pattern = f'<div class="photo-pic"><a href="" id="img"><img src="(.*?)" data-pic='
+    image_url = re.split(pattern, response.text)[1]
+    return image_url
 
 
-with ThreadPoolExecutor(max_workers=16) as k:
-    for j in range(2, 167):
-        k.submit(main, j)
+def get_image(image_url, image_name):
+    image_url = 'https://pic.netbian.com/' + image_url
+    response = requests.get(image_url, headers=headers)
+    response.encoding = 'gbk'
+    img = response.content
+    with open(f'./美女/{image_name}.jpg', 'wb') as f:
+        f.write(img)
+
+
+# for page in range(2, 22):
+#     html_url = f'https://pic.netbian.com/pingban/index_{page}.html'
+#     get_html(html_url)
+
+
+with ThreadPoolExecutor(max_workers=8) as k:
+    for page in range(2, 22):
+        html_url = f'https://pic.netbian.com/4kmeinv/index_{page}.html'
+        k.submit(get_html, html_url)
