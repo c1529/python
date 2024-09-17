@@ -25,7 +25,7 @@ data_1 = [
     {
         "field_name": "姓名",
         "field_key": 1,
-        "field_value": "张宇腾",
+        "field_value": "张三",
         "ignore": 0
     },
     {
@@ -38,7 +38,7 @@ data_1 = [
     {
         "field_name": "学院",
         "field_key": "d5d29d49-25cd-649d-4190-a88eea9802a3",
-        "field_value": "数智",
+        "field_value": "金融",
         "ignore": 0
     },
     {
@@ -69,7 +69,7 @@ data_2 = [
     {
         "field_name": "姓名",
         "field_key": 1,
-        "field_value": "刘闯",
+        "field_value": "李四",
         "ignore": 0
     },
     {
